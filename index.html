@@ -22,6 +22,39 @@ a{text-decoration:none;color:inherit}
 .container{width:min(1180px,92%);margin:auto}
 
 
+
+/* CLICKABLE DROPDOWN + PALETTE SWITCHER */
+.nav-item-dropdown::after{
+  content:"";position:absolute;left:-12px;right:-12px;top:100%;height:14px;
+}
+.nav-item-dropdown.open .dropdown{
+  opacity:1;visibility:visible;pointer-events:auto
+}
+.palette-panel{
+ position:fixed;right:18px;bottom:122px;z-index:1200;background:#fffdf8;
+ border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 10px 30px #0001;
+ font-size:11px;max-width:245px
+}
+.palette-panel strong{display:block;color:var(--green);margin:0 0 7px}
+.palette-panel button{
+ border:1px solid transparent;background:#eee9df;border-radius:9px;padding:7px 8px;margin:2px;
+ cursor:pointer;font:inherit;color:var(--green)
+}
+.palette-panel button:hover,.palette-panel button.selected{border-color:var(--green)}
+.swatches{display:inline-flex;vertical-align:middle;margin-left:5px;gap:2px}
+.swatches i{width:10px;height:10px;border-radius:50%;display:block}
+.image-guide{
+ background:#f5f0e5;border:1px dashed #c9c0af;border-radius:18px;padding:20px;margin-top:28px;
+ font-size:13px
+}
+.image-guide code{background:#e9e3d8;padding:2px 5px;border-radius:4px}
+@media(max-width:900px){
+ .palette-panel{bottom:112px;right:10px}
+ .dropdown{position:static;transform:none;min-width:0;box-shadow:none;border:0;background:transparent;padding:5px 0 0 8px}
+ .nav-item-dropdown.open .dropdown{display:block}
+ .nav-item-dropdown:not(.open) .dropdown{display:none}
+}
+
 /* SERVICES DROPDOWN */
 .nav-item-dropdown{position:relative}
 .nav-item-dropdown>a{display:flex;align-items:center;gap:6px}
@@ -163,6 +196,15 @@ footer{background:#1d3b30;color:#f7f3e8;padding:48px 0}.footer-grid{display:grid
  <button data-font="editorial">Editorial</button>
 </div>
 
+<div class="palette-panel">
+ <strong>Prova palette colori</strong>
+ <button class="selected" data-palette="sage">Sage + terracotta <span class="swatches"><i style="background:#23483a"></i><i style="background:#c96f32"></i><i style="background:#f7f3e9"></i></span></button>
+ <button data-palette="olive">Oliva + ocra <span class="swatches"><i style="background:#40543a"></i><i style="background:#c9952e"></i><i style="background:#f4efdf"></i></span></button>
+ <button data-palette="forest">Bosco + pesca <span class="swatches"><i style="background:#183f36"></i><i style="background:#d47d67"></i><i style="background:#f6eee4"></i></span></button>
+ <button data-palette="blue">Petrolio + azzurro <span class="swatches"><i style="background:#244b52"></i><i style="background:#6f9eaa"></i><i style="background:#f3f1e8"></i></span></button>
+ <button data-palette="plum">Verde + prugna <span class="swatches"><i style="background:#3d5148"></i><i style="background:#8c5f72"></i><i style="background:#f5efe8"></i></span></button>
+</div>
+
 <main id="home">
 <section class="hero">
  <div class="container hero-grid">
@@ -214,7 +256,7 @@ footer{background:#1d3b30;color:#f7f3e8;padding:48px 0}.footer-grid{display:grid
    <p>Supporto allo studio, attività ludico-ricreative e percorsi personalizzati per bambini e ragazzi, con un approccio sereno e motivante.</p>
    <a class="btn" href="#contatti">Scopri lo spazio →</a>
   </div>
-  <div class="learning-box"><h3>Un percorso pensato per ogni persona</h3><div class="checks"><div>Supporto compiti in piccoli gruppi</div><div>Educatori qualificati</div><div>Metodo personalizzato</div><div>Ambiente sereno e motivante</div></div></div>
+  <div class="learning-box"><h3>Un percorso pensato per ogni persona</h3><div class="checks"><div>Supporto compiti in piccoli gruppi</div><div>Educatori qualificati</div><div>Metodo personalizzato</div><div>Ambiente sereno e motivante</div></div><div class="image-guide"><strong>Immagini:</strong> per le foto principali prepareremo file JPG/WebP a circa <code>1600 × 1200 px</code>; per illustrazioni e decorazioni, preferiremo <code>SVG</code> o PNG trasparenti a <code>2000 px</code> circa sul lato maggiore.</div></div>
  </div>
 </section>
 
@@ -237,12 +279,60 @@ footer{background:#1d3b30;color:#f7f3e8;padding:48px 0}.footer-grid{display:grid
 
 <script>
 const root=document.documentElement;
+
+const palettes={
+ sage:{
+  '--cream':'#f7f3e9','--paper':'#fffdf8','--green':'#23483a','--sage':'#aab89d',
+  '--terracotta':'#c96f32','--orange':'#df7e35','--blue':'#bdd4dc','--ink':'#26332e','--line':'#ddd8cb'
+ },
+ olive:{
+  '--cream':'#f4efdf','--paper':'#fffdf6','--green':'#40543a','--sage':'#a6ad82',
+  '--terracotta':'#c9952e','--orange':'#d9a342','--blue':'#c8d1bf','--ink':'#2e382d','--line':'#d9d2be'
+ },
+ forest:{
+  '--cream':'#f6eee4','--paper':'#fffaf5','--green':'#183f36','--sage':'#9daf91',
+  '--terracotta':'#d47d67','--orange':'#df956f','--blue':'#d7e2db','--ink':'#29332e','--line':'#ded3c7'
+ },
+ blue:{
+  '--cream':'#f3f1e8','--paper':'#fffefa','--green':'#244b52','--sage':'#9db7b1',
+  '--terracotta':'#6f9eaa','--orange':'#d08a62','--blue':'#b8d2da','--ink':'#293537','--line':'#d6d9d1'
+ },
+ plum:{
+  '--cream':'#f5efe8','--paper':'#fffaf6','--green':'#3d5148','--sage':'#aab8a4',
+  '--terracotta':'#8c5f72','--orange':'#b77878','--blue':'#c8d3d0','--ink':'#2d3330','--line':'#ddd1ca'
+ }
+};
+document.querySelectorAll('.palette-panel button').forEach(btn=>{
+ btn.addEventListener('click',()=>{
+  const p=palettes[btn.dataset.palette];
+  Object.entries(p).forEach(([key,value])=>root.style.setProperty(key,value));
+  document.querySelectorAll('.palette-panel button').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+ });
+});
+
 const fonts={
  manrope:['"Manrope",sans-serif','"Manrope",sans-serif'],
  jakarta:['"Plus Jakarta Sans",sans-serif','"Plus Jakarta Sans",sans-serif'],
  dm:['"DM Sans",sans-serif','"DM Sans",sans-serif'],
  editorial:['"Fraunces",serif','"DM Sans",sans-serif']
 };
+
+const serviceNav=document.querySelector('.nav-item-dropdown');
+const serviceLink=serviceNav?.querySelector(':scope > a');
+serviceLink?.addEventListener('click',(e)=>{
+ if(window.innerWidth>900){
+   e.preventDefault();
+   serviceNav.classList.toggle('open');
+ }
+});
+document.addEventListener('click',(e)=>{
+ if(serviceNav && !serviceNav.contains(e.target)) serviceNav.classList.remove('open');
+});
+document.querySelectorAll('.dropdown a').forEach(a=>{
+ a.addEventListener('click',()=>serviceNav?.classList.remove('open'));
+});
+
 document.querySelectorAll('.font-panel button').forEach(btn=>{
  btn.addEventListener('click',()=>{
   const f=fonts[btn.dataset.font];
